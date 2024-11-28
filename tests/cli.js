@@ -165,6 +165,78 @@ tape.test("with null-defaults, absent optional fields have null values", functio
 });
 
 
+tape.test("with --null-semantics, optional fields are handled correctly in proto2", function(test) {
+    cliTest(test, function() {
+        var root = protobuf.loadSync("tests/data/cli/null-defaults.proto");
+        root.resolveAll();
+
+        var staticTarget = require("../cli/targets/static");
+
+        staticTarget(root, {
+            create: true,
+            decode: true,
+            encode: true,
+            convert: true,
+            comments: true,
+            "null-semantics": true,
+        }, function(err, jsCode) {
+
+            test.error(err, 'static code generation worked');
+
+            test.ok(jsCode.includes("@property {OptionalFields.ISubMessage|null|undefined} [a] OptionalFields a"), "Property for a should use an interface")
+            test.ok(jsCode.includes("@member {OptionalFields.SubMessage|null} a"), "Member for a should use a message type")
+            test.ok(jsCode.includes("OptionalFields.prototype.a = null;"), "Initializer for a should be null")
+
+            test.ok(jsCode.includes("@property {number|null|undefined} [c] OptionalFields c"), "Property for c should be nullable")
+            test.ok(jsCode.includes("@member {number|null} c"), "Member for c should be nullable")
+            test.ok(jsCode.includes("OptionalFields.prototype.c = null;"), "Initializer for c should be null")
+
+            test.ok(jsCode.includes("@property {number} d OptionalFields d"), "Property for d should not be nullable")
+            test.ok(jsCode.includes("@member {number} d"), "Member for d should not be nullable")
+            test.ok(jsCode.includes("OptionalFields.prototype.d = 0;"), "Initializer for d should be zero")
+
+            test.end();
+        });
+    });
+});
+
+
+tape.test("with --null-semantics, optional fields are handled correctly in proto3", function(test) {
+    cliTest(test, function() {
+        var root = protobuf.loadSync("tests/data/cli/null-defaults-proto3.proto");
+        root.resolveAll();
+
+        var staticTarget = require("../cli/targets/static");
+
+        staticTarget(root, {
+            create: true,
+            decode: true,
+            encode: true,
+            convert: true,
+            comments: true,
+            "null-semantics": true,
+        }, function(err, jsCode) {
+
+            test.error(err, 'static code generation worked');
+
+            test.ok(jsCode.includes("@property {OptionalFields.ISubMessage|null|undefined} [a] OptionalFields a"), "Property for a should use an interface")
+            test.ok(jsCode.includes("@member {OptionalFields.SubMessage|null} a"), "Member for a should use a message type")
+            test.ok(jsCode.includes("OptionalFields.prototype.a = null;"), "Initializer for a should be null")
+
+            test.ok(jsCode.includes("@property {number|null|undefined} [c] OptionalFields c"), "Property for c should be nullable")
+            test.ok(jsCode.includes("@member {number|null} c"), "Member for c should be nullable")
+            test.ok(jsCode.includes("OptionalFields.prototype.c = null;"), "Initializer for c should be null")
+
+            test.ok(jsCode.includes("@property {number|undefined} [d] OptionalFields d"), "Property for d should be optional but not nullable")
+            test.ok(jsCode.includes("@member {number} d"), "Member for d should not be nullable")
+            test.ok(jsCode.includes("OptionalFields.prototype.d = 0;"), "Initializer for d should be zero")
+
+            test.end();
+        });
+    });
+});
+
+
 tape.test("pbjs generates static code with message filter", function (test) {
     cliTest(test, function () {
         var root = protobuf.loadSync("tests/data/cli/test-filter.proto");
@@ -192,8 +264,6 @@ tape.test("pbjs generates static code with message filter", function (test) {
             var $protobuf = protobuf;
             eval(jsCode);
 
-            console.log(protobuf.roots);
-
             var NeedMessage1 = protobuf.roots.default.filtertest.NeedMessage1;
             var NeedMessage2 = protobuf.roots.default.filtertest.NeedMessage2;
             var DependentMessage1 = protobuf.roots.default.filtertest.DependentMessage1;
@@ -201,7 +271,7 @@ tape.test("pbjs generates static code with message filter", function (test) {
 
             var NotNeedMessageInRootFile = protobuf.roots.default.filtertest.NotNeedMessageInRootFile;
             var NotNeedMessageInImportFile = protobuf.roots.default.NotNeedMessageInImportFile;
-            
+
             test.ok(NeedMessage1, "NeedMessage1 is loaded");
             test.ok(NeedMessage2, "NeedMessage2 is loaded");
             test.ok(DependentMessage1, "DependentMessage1 is loaded");

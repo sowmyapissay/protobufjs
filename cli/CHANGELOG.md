@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.1.4](https://github.com/protobufjs/protobuf.js/compare/protobufjs-cli-v1.1.3...protobufjs-cli-v1.1.4) (2024-08-22)
+
+
+### Bug Fixes
+
+* include ([28e3334](https://github.com/protobufjs/protobuf.js/commit/28e333415d3c85687810e164125997d17baba0bd))
+
+## [1.1.3](https://github.com/protobufjs/protobuf.js/compare/protobufjs-cli-v1.1.2...protobufjs-cli-v1.1.3) (2024-08-16)
+
+
+### Bug Fixes
+
+* handle nullability for optional fields ([59569c1](https://github.com/protobufjs/protobuf.js/commit/59569c12c85c1c7b783ace9a71775b1d05a08e9c))
+
+## [1.1.2](https://github.com/protobufjs/protobuf.js/compare/protobufjs-cli-v1.1.1...protobufjs-cli-v1.1.2) (2023-08-21)
+
+
+### Bug Fixes
+
+* possible infinite loop when parsing option ([#1923](https://github.com/protobufjs/protobuf.js/issues/1923)) ([f2a8620](https://github.com/protobufjs/protobuf.js/commit/f2a86201799af5842e1339c22950abbb3db00f51))
+
 ## [1.1.1](https://github.com/protobufjs/protobuf.js/compare/protobufjs-cli-v1.1.0...protobufjs-cli-v1.1.1) (2023-02-02)
 
 
